@@ -4,6 +4,7 @@ function [ ims imdepths ] = function_dummydata( Setup )
 
 z = [-300 : 2: 300] * 30e-4 ;   % Depth level requested in 3D region.
 load('Letters_Data');
+masks = masks(200:500,200:500,:);
 n = 10;
 % % Preprocess image
 resizeX =450;
@@ -33,5 +34,8 @@ disp('Dummy data Ready !')
 end
 imdepths = imdepths-mean(imdepths);
 imdepths = 6*imdepths;
+
+
+ims = double(ims>0.3);
 end
 

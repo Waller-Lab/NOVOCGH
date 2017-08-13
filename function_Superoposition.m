@@ -1,4 +1,4 @@
-function [ hologram ] = function_Superoposition( System,HStacks,Masks )
+function [ Superposition ] = function_Superoposition( System,HStacks,Masks )
 %This algorithm conducts a simple superposition 
 if System.verbose == 1; fprintf('Superposition hologram computation begins...'); tic; end;
 [NX,NY,LZ] = size(Masks);
@@ -9,6 +9,9 @@ for i = 1:LZ
 end
 if System.verbose == 1
 t = toc;
+Superposition.hologram = hologram;
+Superposition.phase = gather(angle(Superposition.hologram));
+
 disp(['Completed in ' int2str(t) ' seconds !']);
 end
 end

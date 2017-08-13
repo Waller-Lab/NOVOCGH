@@ -1,4 +1,4 @@
-function [ hologram,phase ] = function_NOVO_CGH_binary( System, HStacks, Masks,Depths,NormOptions )
+function [ hologram,phase ] = function_NOVO_CGH_dualbinary( System, HStacks, Masks, KickMasks,Depths,NormOptions )
 % This computes NOVO-CGH holgorams with binary targets. 
 
 %Initialize phase guess with a superposition
@@ -16,7 +16,9 @@ thresholdl = NormOptions.LowThreshold * thresholdh;
 % Define functions for mask kernel, and optimization local paramenters
 kernelfun = @(i1, i2) HStacks(:,:,i1:i2);
 maskfun = @(i1, i2) Masks(:,:,i1:i2);
-f = @(x)function_FunObj_binary( x, System.source, Depths, System.Nx, System.Ny, thresholdh, thresholdl, maskfun, kernelfun, System.useGPU);
+kickmaskfun = @(i1, i2) KickMasks(:,:,i1:i2);
+
+f = @(x)function_FunObj_VarI( x, System.source, Depths, System.Nx, System.Ny, thresholdh, thresholdl, maskfun, kickmaskfun, kernelfun, System.useGPU);
 if System.verbose == 1; tic;end;
 if System.verbose==1 ; displayoption = 'iter'; else; displayoption = 'off'; end
 matlab_options = optimoptions('fmincon','GradObj','on', 'display', displayoption, ...
