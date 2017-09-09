@@ -1,3 +1,6 @@
+% This function returns a volume intensity for a specified phase pattens
+% and Propagation kernel HStacks.
+
 function [ Intensity ] = function_VolumeIntensity( System,phase,HStacks)
 if System.verbose == 1
 tic;

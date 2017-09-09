@@ -1,6 +1,9 @@
+%%% This is the implemetnation of GLOBAL Gerchberg Saxton algorithm. 
+%%% Optional, System.GSoffset hyperparameter
+
 function [ GS ] = function_globalGS(System, HStacks, Masks )
 if System.verbose == 1
-    disp('Sequential Gerchberg-Saxton hologram computation begins...');
+    disp('Global Gerchberg-Saxton hologram computation begins...');
     tic;
 end;
 ims = Masks;
@@ -10,16 +13,22 @@ if System.useGPU == 1
 else
     imageInten = zeros(NX,NY,NZ);
 end
-[ Superposition] = function_Superoposition( System,HStacks,Masks );
+vv = System.verbose;
+System.verbose = 0;
+[ Superposition ] = function_Superposition( System,HStacks,Masks);
+System.verbose = vv;
 if System.verbose == 1
     fprintf('Completed cycles #');
 end;
 Superposition.phase = mod(Superposition.phase, 2*pi) - pi;
 im = System.source.*exp(1i * Superposition.phase);
-for n = 1:System.maxiter+1
+for n = 1:System.maxiter
     if System.verbose == 1
         if mod(n, 10) == 0
             fprintf(int2str(n));fprintf(',')
+        end
+        if n == System.maxiter;
+           fprintf(int2str(n));
         end
     end
     index = 1:NZ;
@@ -36,10 +45,10 @@ end
 %phase = gather(angle(im));
 if System.verbose == 1
     t = toc;
-    disp(['Completed in ' int2str(t) ' seconds !']);
+    disp(' ');
+    disp(['Global Gerchberg-Saxton - Completed in ' int2str(t) ' seconds !']);
 end;
 
 GS.hologram = im;
 GS.phase = gather(angle(GS.hologram));
 end
-

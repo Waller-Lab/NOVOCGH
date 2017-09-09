@@ -1,8 +1,8 @@
-function [loss, df ] = function_FunObj_binary( phase, source, z, Nx, Ny, thresholdh, thresholdl, maskFun, fresnelKernelFun, useGPU)
+function [loss, df ] = function_FunObj_dualbinary( phase, source, z, Nx, Ny, thresholdh, thresholdl, maskFun, kickmaskFun,fresnelKernelFun, useGPU)
 % 
 % This function is called by Matlab's fmincon library.
-% Computes loss and gradient or BINARY NOVOCGH with a threshold-based cost
-% function
+% Computes loss and gradient or BINARY NOVOCGH with a Dual threshold-based cost
+% function that enforces either Dark or Bright voxels, or relaxes constraints elsewhere  !
 
 if useGPU
 df = zeros(Nx, Ny, 'gpuArray');
@@ -18,11 +18,12 @@ objectField = source.*exp(1i * phase);
 
 for i = 1 : numel(z)
     HStack = fresnelKernelFun(i,i);
-    mask = maskFun(i,i);    
+    mask = maskFun(i,i);  
+    kickmask = kickmaskFun(i,i); 
     imagez = fftshift(fft2(objectField .* HStack));
     imageInten = abs(imagez.^2);
     maskh = mask .* (imageInten < thresholdh);
-    maskl = (1-mask) .* (imageInten > thresholdl);
+    maskl = kickmask .* (imageInten > thresholdl);
     diffh = maskh .* (imageInten - thresholdh);
     diffl = maskl .* (imageInten - thresholdl);
     temph = imagez.*diffh;

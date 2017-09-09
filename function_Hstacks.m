@@ -1,6 +1,7 @@
 function [ HStacks ] = function_Hstacks( System,z )
 %Precompute Fresnel propagation kernels at depths specified by vector z 
-%for fast computation of wave propagation in all algorithms. 
+%for fast computation of wave propagation in all algorithms.
+
 if System.verbose == 1
     tic;
     fprintf('Kernel computation begins...');
