@@ -39,7 +39,7 @@ for i = 1 : numel(z)
     temph = imagez.*temph;
     temph = conj(HStack).*(Nx*Ny*ifft2(ifftshift(temph)));
         %Compute losses
-    loss = loss + sum(sum(diffh )); 
+    loss = loss + sum(sum(diffh)); 
         %Compute gradient
     df = df +  temph ;
 end

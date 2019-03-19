@@ -1,8 +1,9 @@
-function [ ims, darkims, imdepths ] = function_dummydata( Setup )
+function [ ims, imdepths ] = function_dummydata( Setup )
+% % [ ims, darkims, imdepths ] = function_dummydata( Setup )
 %%% This function for the purposes only of exemple simulation, provides a
 %%% series of target intensity (ims), dark voxels (darkims), and depths (imdepths) for the desired format. 
 
-load('Dummy_Data');
+load('Dummy_data.mat');
 imdepths =0.1*linspace(1,10,10);
 masks = masks(220:380,325:485,:);
 ims = imresize(masks, [Setup.Nx, Setup.Ny]);

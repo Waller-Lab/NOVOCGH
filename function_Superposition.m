@@ -7,12 +7,12 @@ if System.verbose == 1; disp('Superposition hologram computation begins...'); ti
 hologram = zeros(NX, NY);
 for i = 1:LZ
     target = max(Masks(:,:,i),0);
+    rng(50);%MODIFIED
     hologram = hologram + ifft2(ifftshift(sqrt(target) .* exp(1i * randn(NX,NY))))./HStacks(:,:,i);
 end
 
 Superposition.hologram = hologram;
 Superposition.phase = gather(angle(Superposition.hologram));
-
 
 if System.verbose == 1
 t = toc;

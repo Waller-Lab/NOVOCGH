@@ -8,7 +8,7 @@ System.psSLM = 20e-6;       % meters    SLM pixel dimensions
 System.Nx = 300;            % int       Number of pixels in X direction
 System.Ny = 300;            % int       Number of pixels in Y direction
 System.useGPU = 1;          % 1 or 0    Use GPU to accelerate computation. Effective when Nx, Ny is large (e.g. 600*800).
-System.maxiter = 10;        % int       Number of iterations (for all methods explored)
+System.maxiter = 100;        % int       Number of iterations (for all methods explored)
 System.GSoffset = 0.01;     % float>0   Regularization constant to allow low light background in 3D Gerchberg Saxton algorithms
 
 %First we generate target hologram,s Masks, and associated depths, Depths,
@@ -34,13 +34,13 @@ System.source = sqrt(System.intensity)*(1/(System.Nx* System.Ny))*ones(System.Nx
 
 %% Generate hologram by the sequential Gerchberg Saxtion method.
 [ GS.hologram ] = function_sequentialGS(System, HStacks, Masks );
-GS.phase = gather(angle(GS.hologram));
+GS.phase = gather(angle(GS.hologram.hologram));
 
 % Set up threshold values for both low-pass and high-pass norms, and then compile binary 3D hologram with
 % NOVO_CGH algorithm.
 NormOptions.HighThreshold = 0.5;
 NormOptions.LowThreshold = 0.1;
-[ NOVOCGH.hologram,NOVOCGH.phase ] = function_NOVO_CGH_binary( System, HStacks, Masks,Depths,NormOptions );
+[ NOVOCGH] = function_NOVO_CGH_binary( System, HStacks, Masks,Depths,NormOptions );
 
 %We compute the intensity pattern
 [  NOVOCGH.IntensityStack] = function_VolumeIntensity( System, NOVOCGH.phase,HStacks );

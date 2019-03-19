@@ -16,7 +16,7 @@ System.GSoffset = 0.01;     % float>0   Regularization constant to allow low lig
 %First we generate target hologram,s Masks, and associated depths, Depths,
 %with aproporiate format (if GPU used) from a dummy set of images, Images.
 % using our dummy data generator
-[ Images, Depths ] = function_dummydata( System );
+[ Images, Depths ] = function_dummydata( System );%MODIFY BY YI
 %Images = Images(:,:,[2 4 6]); Depths = Depths([2 4 6]);
 
 Depths = Depths/2;
@@ -46,7 +46,8 @@ System.source = sqrt(System.intensity)*(1/(System.Nx* System.Ny))*ones(System.Nx
 % NOVO_CGH algorithm.
 NormOptions.HighThreshold = 0.5;
 NormOptions.LowThreshold = 0.1;
-[ NOVOCGH.hologram,NOVOCGH.phase ] = function_NOVO_CGH_binary( System, HStacks, Masks,Depths,NormOptions );
+% [ NOVOCGH.hologram,NOVOCGH.phase ] = function_NOVO_CGH_binary( System, HStacks, Masks,Depths,NormOptions );
+NOVOCGH=function_NOVO_CGH_binary( System, HStacks, Masks,Depths,NormOptions );%MODIFY BY YI
 
 %We compute the intensity pattern
 [  Superposition.IntensityStack] = function_VolumeIntensity( System, Superposition.phase,HStacks );
